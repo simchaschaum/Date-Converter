@@ -1,73 +1,169 @@
-// The API:
-const url1 = "https://www.hebcal.com/converter?cfg=json&gy="  // followed by YEAR (4 digits)
-const url2 = "&gm="  // followed by number for MONTH (1 or 2 digit number)
-const url3 = "&gd="  // followed by number for DAY (1 or two digit number)
-const url4 = "&g2h=1&"  // means converting Gregorian to Hebrew
-
 // DOM Selectors
-const totalDate = document.getElementById("totalDate");
+const grMonthInput = document.getElementById("grMonthInput");
+const grDayInput = document.getElementById("grDayInput");
+const grYearInput = document.getElementById("grYearInput")
 const sunset = document.getElementById("sunset");
-const form = document.getElementById("form");
+const gthForm = document.getElementById("gthForm");
+
+const heMonthInput = document.getElementById("heMonthInput");
+const heDayInput = document.getElementById("heDayInput");
+const heYearInput = document.getElementById("heYearInput")
+const htgForm = document.getElementById("htgForm");
+const today = document.getElementById("todaySubmit");
+const afterSunset = document.getElementById("afterSunset");
+
+const displayModal = document.querySelector(".modal");
 const display = document.getElementById("display");
-const grDisplay = document.getElementById("grDisplay");
-const heDisplay = document.getElementById("heDisplay");
+const displayTitle = document.getElementById("displayModalLabel");
+const displaySpecial = document.getElementById("displaySpecial")
+const newConversion = document.getElementById("newConversion");
+const closeModal = document.getElementById("closeModal");
+const modal = document.getElementsByClassName("modal")[0]
 
 // Declaring Variables:
-let beforeSunset = 'gs=off'; 
+let beforeSunset = ""; 
 let year, month, day;  // the Gregorian info
 let dataObj = {};
-let heYear, heMonth, heDay, heHebrew; // the Hebrew info
+let heYear, heMonth, heDay, heHebrew, heSpecial; // the Hebrew info
+let grYear, grMonth, grDay
 
 // Event Listeners:
-totalDate.addEventListener("change",(e)=>{
-    makeDate();
-})
-sunset.addEventListener("change",(e)=>{
-    beforeSunset = sunset.checked ? "gs=on" : "gs-off";
-})
-form.addEventListener("submit",(e)=>{
+// For converting a Gregorian date
+gthForm.addEventListener("submit",(e)=>{
     e.preventDefault();
-    if(totalDate.value != ""){
-        sendApi();
-    } 
+    if(grYearInput.value != "" && grDayInput.value != ""){
+        sendApi(1);
+    } else {
+        errorMessage("Oops! You are missing some details.")
+    }
 })
+// For converting a Hebrew date
+htgForm.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    if(heYearInput.value != "" && heDayInput.value != ""){
+        sendApi(2);
+    } else {
+        errorMessage("Oops! You are missing some details.")
+    }})
+// For showing today's dates
+today.addEventListener("click",(e)=>{
+    e.preventDefault();
+    sendApi(3);
+})
+// for closing modal and clearing display
+closeModal.addEventListener("click",()=>{
+    clearDisplay()
+})
+modal.addEventListener("click",()=>{
+    clearDisplay()
+})
+
 
 // Functions:
-function makeDate(){
-    let dateArr = totalDate.value.split("-");
-    year = dateArr[0].match(/^\d{4}/)[0];
-    month = dateArr[1];
-    day = dateArr[2];
-}
-
-function sendApi(){
-    console.log(url1+year+url2+month+url3+day+url4+beforeSunset);
-    fetch(url1+year+url2+month+url3+day+url4+beforeSunset)
+function sendApi(num){
+    const url1 = "https://www.hebcal.com/converter?cfg=json&"// followed by YEAR;
+    if(num===1){
+        year = `gy=${grYearInput.value}`;
+        month = `&gm=${grMonthInput.value}`;
+        day = `&gd=${grDayInput.value}`;
+        beforeSunset = sunset.checked ? "&gs=on" : "&gs-off";
+    } else if (num===2){
+        year = `hy=${heYearInput.value}`;
+        month = `&hm=${heMonthInput.value}`;
+        day = `&hd=${heDayInput.value}`
+    } else {
+        let today = new Date;
+        year = `gy=${today.getFullYear()}`;
+        month = `gy=${today.getMonth()+1}`;
+        day = `&gd=${today.getDate()}`;
+        beforeSunset = afterSunset.checked ? "&gs=on" : "&gs-off";
+    }
+    const url4 = num===1 || num===3? "&g2h=1" :  "&h2g=1" // gregorian to hebrew or hebrew to gregorian (or today)
+    fetch(url1+year+month+day+url4+beforeSunset)
         .then(response => response.json())
         .then(data => {
-            // console.log(data);
             dataObj = data;
         })
-        .then(()=>hebrewInfo())
+        .then(()=> {
+            if(dataObj.hasOwnProperty("error")){
+                errorMessage(`Sorry! ${dataObj.error}`)
+            } else {
+                conversionInfo(num)
+            } 
+        })
         .catch(error => {
             console.log(error);
-            // Put error message here
+            errorMessage("Sorry! We could not make the date conversion now.")
         })
 }
 
-function hebrewInfo(){
-    console.log(dataObj);
+// Getting the info from the object for display:
+function conversionInfo(num){
     heYear = dataObj.hy;
     heMonth = dataObj.hm;
     heDay = dataObj.hd;
     heHebrew = dataObj.hebrew;
-
-    setDisplay()
+    grYear = dataObj.gy;
+    heSpecial = dataObj.events;
+    // converting the number into the month name
+    let grMonthArr = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    grMonth = grMonthArr[dataObj.gm-1];
+    grDay = dataObj.gd;
+    setDisplay(num)
 }
 
-function setDisplay(){
-    grDisplay.innerText = `Gregorian date: month: ${month}, day: ${day}, year: ${year}`;
-    heDisplay.innerText = `Hebrew date: month: ${heMonth}, day: ${heDay}, year: ${heYear}`;
+function setDisplay(num){
+    let grSuffix, heSuffix;
+    // Setting the number suffix to fit the number
+    if(grDay===1 || grDay===21 || grDay===31){
+        grSuffix = "st"
+    } else if (grDay===2 || grDay===22){
+        grSuffix = "nd"
+    } else if (grDay===3 || grDay===23){
+        grSuffix = "rd"
+    } else {
+        grSuffix = "th"
+    }
+    if(heDay===1 || heDay===21 || heDay===31){
+        heSuffix = "st"
+    } else if (heDay===2 || heDay===22){
+        heSuffix = "nd"
+    } else if (heDay===3 || heDay===23){
+        heSuffix = "rd"
+    } else {
+        heSuffix = "th"
+    }
+    // The order of display depends on the direction of the conversion.
+    if (num===1){
+        displayTitle.innerText = `Converting from Gregorian to Hebrew Date`;
+        display.innerText = `${grMonth} ${grDay}${grSuffix}, ${grYear} = ${heMonth} ${heDay}${heSuffix}, ${heYear}
+        ${heHebrew}`;
+    } else if(num===2){
+        displayTitle.innerText = `Converting from Hebrew to Gregorian Date`;
+        display.innerText = `${heMonth} ${heDay}${heSuffix}, ${heYear} = ${grMonth} ${grDay}${grSuffix}, ${grYear}
+        ${heHebrew}`;
+    } else {
+        displayTitle.innerText = `Today's Dates`;
+        display.innerText = `${heMonth} ${heDay}${heSuffix}, ${heYear} = ${grMonth} ${grDay}${grSuffix}, ${grYear}
+        ${heHebrew}`;
+    }
+    heSpecial.forEach(item => {
+        let p = document.createElement("p");
+        let txt = document.createTextNode(item);
+        p.appendChild(txt);
+        displaySpecial.appendChild(p);
+    })
+}
+
+function errorMessage(msg){
+    displayTitle.innerText = "Error Message"
+    display.innerText = `${msg}`;
+}
+
+function clearDisplay(){
+    while (displaySpecial.firstChild) {
+        displaySpecial.removeChild(displaySpecial.firstChild);
+    }
 }
 
 
@@ -78,6 +174,14 @@ notes:
 - make sure only submit if a date is first input
 - make sure year has only 4 digits - tried tofixed but it's a string, not a digit.  Used regex. 
 - problem with after sunset? (missing the & in the url)
-- interface: one date input or month/day/year? Go with split - makes it uniform for both ways. 
-
+- interface: one date input or month/day/year? Go with split - makes it uniform for both ways.
+- input - limit year to 4-digits; minlength/ maxlength don't work on input type-number; Found input=text, pattern=\d* then use minlneght and maxlength; problem is the message is "4 or more!" 
+choice to create custom validation (validation is kinda annoying) or to remove it from HTML altogether and just add error messages in JS.
+- error message - check it on top. 
+- use bootstrap modal
+- display: change number to name
+- display: toggle "th" or "rd"
+- add the special stuff to the end 
+- today: get today's date... then need to find sunset!! :)
+- clearing the display - the button and modal background
 */

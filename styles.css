@@ -4,3 +4,130 @@
     box-sizing: border-box;
 }
 
+/* Colors: */
+:root{
+    --clr-pri: #89a7b4;
+    --clr-sec: #b49689;
+    --clr-dark: #08090a;
+    --clr-light: #f6f4cb;
+}
+
+body{
+    background: url(https://images.unsplash.com/photo-1600978699538-7e9bada38456?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=890&q=80) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    height: 100vh;
+}
+
+/* Header */
+header{
+    background-color: var(--clr-pri);
+    color: var(--clr-dark);
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px var(--clr-dark);
+}
+
+/* Container for all forms */
+#formsDiv{
+    box-shadow: 0 0 10px var(--clr-dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    margin: 25px auto;
+    padding: 25px;
+    background-color: var(--clr-pri);
+    border-radius: 3px;
+}
+@media only screen and (max-width: 750px){
+    #formsDiv{
+        width: 90%
+    }
+}
+.modal-content{
+    color: var(--clr-dark);
+}
+
+form{
+    margin-bottom: 20px;
+    color: var(--clr-dark);
+}
+form>*{
+    margin-bottom: 5px;
+}
+form>div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+form h3{
+    text-align: center;
+}
+form div div{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--clr-light);
+    text-align: center;
+    border-radius: 3px;
+    margin: 0 15px;
+    padding: 5px
+}
+form input{
+    width: 50px;
+    height: 25px;
+    border: none;
+    margin: 0 5px;
+    background-color: var(--clr-light);
+    margin: 0 auto;
+}
+form input[type=submit],
+#todaySubmit{
+    height: 50px;
+    width: 75px;
+    border-radius: 3px;
+    margin: 0 5px;
+    padding: 5px;
+    background-color: var(--clr-sec);
+}
+form input[type=submit]:hover,
+#todaySubmit:hover{
+    background-color: #937264;
+}
+#todaySubmit{
+    border: none;
+    width: 150px
+}
+form input[type=checkbox]{
+    width:25px
+}
+.sunsetDiv{
+    flex-direction: row;
+    align-items: center;
+    font-size: 10px;
+    text-align: left;
+    height: 59px;
+    width: 85px;
+}
+#sunsetDiv label{
+    width: 25px
+}
+form select {
+    width: 100px;
+    height: 25px;
+    background-color: var(--clr-light);
+    border: none;
+}
+form select::selection{
+    border: none;
+}
+
+hr{
+    border-top: solid 1px var(--clr-dark)
+}
