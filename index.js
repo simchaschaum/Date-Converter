@@ -185,5 +185,5 @@ choice to create custom validation (validation is kinda annoying) or to remove i
 - display: toggle "th" or "rd"
 - add the special stuff to the end 
 - today: get today's date... then need to find sunset!! :)
-- clearing the display - the button and modal background
+- clearing the display - the button and modal background; remove child nodes. 
 */
