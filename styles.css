@@ -41,7 +41,7 @@ header{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 70%;
+    width: 60%;
     margin: 25px auto;
     padding: 25px;
     background-color: var(--clr-pri);
