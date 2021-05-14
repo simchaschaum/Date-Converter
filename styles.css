@@ -131,3 +131,23 @@ form select::selection{
 hr{
     border-top: solid 1px var(--clr-dark)
 }
+
+/* Modal Display */
+.modal-header{
+    display: flex;
+    justify-content: center;
+}
+.modal-title{
+    font-size: 2em;
+}
+.modal-body{
+    font-size: 1.25em;
+    text-align: center;
+}
+#display {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+#displaySpecial p{
+    margin-bottom: 0;
+}

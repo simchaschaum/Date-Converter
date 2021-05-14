@@ -135,11 +135,11 @@ function setDisplay(num){
     }
     // The order of display depends on the direction of the conversion.
     if (num===1){
-        displayTitle.innerText = `Converting from Gregorian to Hebrew Date`;
+        displayTitle.innerText = `Converting to Hebrew Date`;
         display.innerText = `${grMonth} ${grDay}${grSuffix}, ${grYear} = ${heMonth} ${heDay}${heSuffix}, ${heYear}
         ${heHebrew}`;
     } else if(num===2){
-        displayTitle.innerText = `Converting from Hebrew to Gregorian Date`;
+        displayTitle.innerText = `Converting to Gregorian Date`;
         display.innerText = `${heMonth} ${heDay}${heSuffix}, ${heYear} = ${grMonth} ${grDay}${grSuffix}, ${grYear}
         ${heHebrew}`;
     } else {
@@ -164,6 +164,8 @@ function clearDisplay(){
     while (displaySpecial.firstChild) {
         displaySpecial.removeChild(displaySpecial.firstChild);
     }
+    displayTitle.innerText = "";
+    display.innerText = "";
 }
 
 
