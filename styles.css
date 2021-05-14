@@ -24,6 +24,7 @@ body{
 
 /* Header */
 header{
+    width: 100%;
     background-color: var(--clr-pri);
     color: var(--clr-dark);
     height: 75px;
@@ -40,7 +41,7 @@ header{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 60%;
+    width: 70%;
     margin: 25px auto;
     padding: 25px;
     background-color: var(--clr-pri);
@@ -66,6 +67,14 @@ form>div{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+@media only screen and (max-width: 750px){
+    form>div {
+        flex-wrap: wrap;
+    }
+    form div div{
+        margin: 10px !important
+    }
 }
 form h3{
     text-align: center;
