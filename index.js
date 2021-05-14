@@ -18,7 +18,8 @@ const displayTitle = document.getElementById("displayModalLabel");
 const displaySpecial = document.getElementById("displaySpecial")
 const newConversion = document.getElementById("newConversion");
 const closeModal = document.getElementById("closeModal");
-const modal = document.getElementsByClassName("modal")[0]
+const modal = document.getElementsByClassName("modal")[0];
+const spinner = document.getElementById("spinner");
 
 // Declaring Variables:
 let beforeSunset = ""; 
@@ -61,7 +62,9 @@ modal.addEventListener("click",()=>{
 
 // Functions:
 function sendApi(num){
-    const url1 = "https://www.hebcal.com/converter?cfg=json&"// followed by YEAR;
+    // first, turn on the spinner:
+    spinnerShowHide(true);
+    const url1 = "https://www.hebcal.com/converter?cfg=json&"
     if(num===1){
         year = `gy=${grYearInput.value}`;
         month = `&gm=${grMonthInput.value}`;
@@ -113,6 +116,8 @@ function conversionInfo(num){
 }
 
 function setDisplay(num){
+    // first, turn off the spinner:
+    spinnerShowHide(false);
     let grSuffix, heSuffix;
     // Setting the number suffix to fit the number
     if(grDay===1 || grDay===21 || grDay===31){
@@ -158,6 +163,14 @@ function setDisplay(num){
 function errorMessage(msg){
     displayTitle.innerText = "Error Message"
     display.innerText = `${msg}`;
+}
+
+function spinnerShowHide(bool){
+    if(bool){
+        spinner.classList.remove("spinnerHide");
+    } else {
+        spinner.classList.add("spinnerHide");
+    }
 }
 
 function clearDisplay(){

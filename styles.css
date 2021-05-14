@@ -152,3 +152,11 @@ hr{
 #displaySpecial p{
     margin-bottom: 0;
 }
+
+/* Spinner */
+.spinner-border{
+    color: var(--clr-sec)
+}
+.spinnerHide{
+    display: none;
+}
