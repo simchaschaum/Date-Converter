@@ -9,6 +9,7 @@ const heMonthInput = document.getElementById("heMonthInput");
 const heDayInput = document.getElementById("heDayInput");
 const heYearInput = document.getElementById("heYearInput")
 const htgForm = document.getElementById("htgForm");
+
 const today = document.getElementById("todaySubmit");
 const afterSunset = document.getElementById("afterSunset");
 
@@ -22,7 +23,7 @@ const modal = document.getElementsByClassName("modal")[0];
 const spinner = document.getElementById("spinner");
 
 // Declaring Variables:
-let beforeSunset = ""; 
+let beforeSunset = "";
 let year, month, day;  // the Gregorian info
 let dataObj = {};
 let heYear, heMonth, heDay, heHebrew, heSpecial; // the Hebrew info
@@ -81,18 +82,19 @@ function sendApi(num){
         day = `&gd=${today.getDate()}`;
         beforeSunset = afterSunset.checked ? "&gs=on" : "&gs-off";
     }
-    const url4 = num===1 || num===3? "&g2h=1" :  "&h2g=1" // gregorian to hebrew or hebrew to gregorian (or today)
-    fetch(url1+year+month+day+url4+beforeSunset)
+    const url2 = num===1 || num===3? "&g2h=1" :  "&h2g=1" // gregorian to hebrew or hebrew to gregorian (or today)
+    fetch(url1+year+month+day+url2+beforeSunset)
         .then(response => response.json())
         .then(data => {
             dataObj = data;
         })
         .then(()=> {
             if(dataObj.hasOwnProperty("error")){
+                spinnerShowHide(false);
                 errorMessage(`Sorry! ${dataObj.error}`)
             } else {
                 conversionInfo(num)
-            } 
+            }
         })
         .catch(error => {
             console.log(error);
@@ -180,23 +182,3 @@ function clearDisplay(){
     displayTitle.innerText = "";
     display.innerText = "";
 }
-
-
-/* 
-notes:
-- get date from date input, break it up into array using .split() (don't need regex)
-- get "beforesunsest" from input
-- make sure only submit if a date is first input
-- make sure year has only 4 digits - tried tofixed but it's a string, not a digit.  Used regex. 
-- problem with after sunset? (missing the & in the url)
-- interface: one date input or month/day/year? Go with split - makes it uniform for both ways.
-- input - limit year to 4-digits; minlength/ maxlength don't work on input type-number; Found input=text, pattern=\d* then use minlneght and maxlength; problem is the message is "4 or more!" 
-choice to create custom validation (validation is kinda annoying) or to remove it from HTML altogether and just add error messages in JS.
-- error message - check it on top. 
-- use bootstrap modal
-- display: change number to name
-- display: toggle "th" or "rd"
-- add the special stuff to the end 
-- today: get today's date... then need to find sunset!! :)
-- clearing the display - the button and modal background; remove child nodes. 
-*/
