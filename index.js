@@ -13,13 +13,12 @@ const htgForm = document.getElementById("htgForm");
 const today = document.getElementById("todaySubmit");
 const afterSunset = document.getElementById("afterSunset");
 
-const displayModal = document.querySelector(".modal");
+const modal = document.getElementById("displayModal");
 const display = document.getElementById("display");
 const displayTitle = document.getElementById("displayModalLabel");
 const displaySpecial = document.getElementById("displaySpecial")
 const newConversion = document.getElementById("newConversion");
 const closeModal = document.getElementById("closeModal");
-const modal = document.getElementsByClassName("modal")[0];
 const spinner = document.getElementById("spinner");
 
 // Declaring Variables:
@@ -33,6 +32,7 @@ let grYear, grMonth, grDay
 // For converting a Gregorian date
 gthForm.addEventListener("submit",(e)=>{
     e.preventDefault();
+    clearDisplay();
     if(grYearInput.value != "" && grDayInput.value != ""){
         sendApi(1);
     } else {
@@ -42,6 +42,7 @@ gthForm.addEventListener("submit",(e)=>{
 // For converting a Hebrew date
 htgForm.addEventListener("submit",(e)=>{
     e.preventDefault();
+    clearDisplay();
     if(heYearInput.value != "" && heDayInput.value != ""){
         sendApi(2);
     } else {
@@ -50,16 +51,9 @@ htgForm.addEventListener("submit",(e)=>{
 // For showing today's dates
 today.addEventListener("click",(e)=>{
     e.preventDefault();
+    clearDisplay();
     sendApi(3);
 })
-// for closing modal and clearing display
-closeModal.addEventListener("click",()=>{
-    clearDisplay()
-})
-modal.addEventListener("click",()=>{
-    clearDisplay()
-})
-
 
 // Functions:
 function sendApi(num){
@@ -98,6 +92,7 @@ function sendApi(num){
         })
         .catch(error => {
             console.log(error);
+            spinnerShowHide(false);
             errorMessage("Sorry! We could not make the date conversion now.")
         })
 }
